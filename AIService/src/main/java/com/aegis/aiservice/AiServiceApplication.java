@@ -17,7 +17,7 @@ public class AiServiceApplication {
         SpringApplication.run(AiServiceApplication.class, args);
     }
 
-    @GetMapping("/")
+    @GetMapping("/ai")
     public Flux<String> index() {
         return Flux.just("AI service is running");
     }

@@ -4,6 +4,15 @@ server:
 spring:
   application:
     name: ai-service
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          # This must match the issuer-uri in the gateway and the JWT token itself.
+          issuer-uri: http://localhost:8080/realms/Aegis_Authserver
+          # The JWK set URI from your Keycloak realm, used to validate the token's signature.
+          jwk-set-uri: http://localhost:8080/realms/Aegis_Authserver/protocol/openid-connect/certs
+
 
 eureka:
   client:

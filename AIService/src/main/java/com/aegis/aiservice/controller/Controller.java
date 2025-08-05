@@ -6,6 +6,7 @@ import com.aegis.aiservice.service.aiServiceImpt;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 @RestController
 @RequestMapping("/chat-service")
@@ -18,6 +19,11 @@ public class Controller {
         this.asisstant = asisstant;
     }
 
+    @GetMapping(value = "/Hi", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Mono<String> hi() {
+        return Mono.just("Hi");
+    }
+
 
     @GetMapping(value = "", produces =  MediaType.TEXT_EVENT_STREAM_VALUE)
     public Flux<String> chat(@RequestBody userGenerateRequest request) {
@@ -26,12 +32,4 @@ public class Controller {
 
         return asisstant.chat(sessionId, message);
     }
-
-//    @GetMapping("/stream")
-//    public Flux<ChatResponse> generateStream(@RequestBody userGenerateRequest request) {
-//        String message = aiService.getMessage(request);
-//
-//        Prompt prompt = new Prompt(new UserMessage(message));
-//        return ollamaChatModel.stream(prompt);
-//    }
 }

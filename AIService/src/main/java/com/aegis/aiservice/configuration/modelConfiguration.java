@@ -37,8 +37,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.task.VirtualThreadTaskExecutor;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.client.RestClient;
-import org.testcontainers.chromadb.ChromaDBContainer;
-
 
 import java.time.Duration;
 import java.util.List;
@@ -53,22 +51,18 @@ class modelConfiguration {
     @Value("${ollama.chatmodel}")
     String ollamaChatModel;
 
+    @Value("${chroma.url}")
+    String chromaURL;
+
     @Bean
     EmbeddingModel embeddingModel() {
         return new AllMiniLmL6V2EmbeddingModel();
     }
 
     @Bean
-    public ChromaDBContainer chromaDBContainer() {
-        ChromaDBContainer container = new ChromaDBContainer("chromadb/chroma:0.6.0"); // Use a specific version
-        container.start();
-        return container;
-    }
-
-    @Bean
-    EmbeddingStore<TextSegment> embeddedStore(ChromaDBContainer chromaDBContainer) {
+    EmbeddingStore<TextSegment> embeddedStore() {
         return ChromaEmbeddingStore.builder()
-                .baseUrl(chromaDBContainer.getEndpoint())
+                .baseUrl(chromaURL)
                 .collectionName("knowledge_base")
                 .build();
     }
@@ -140,11 +134,10 @@ class modelConfiguration {
     }
 
     @Bean
-    public asisstant assistant(StreamingChatModel model) {
+    public asisstant assistant(StreamingChatModel model, EmbeddingStore<TextSegment> embeddedStore) {
         return AiServices.builder(asisstant.class)
                 .streamingChatModel(model)
-//                .contentRetriever(EmbeddingStoreContentRetriever.from(embeddedStore()))
+                .contentRetriever(EmbeddingStoreContentRetriever.from(embeddedStore))
                 .build();
     }
-
 }
