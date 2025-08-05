@@ -4,6 +4,29 @@ server:
 spring:
   application:
     name: gateway-service
+  security:
+    oauth2:
+      client:
+        provider:
+          keycloak: # This 'keycloak' is your custom provider name (registrationId)
+            issuer-uri: http://localhost:8080/realms/Aegis_Authserver # Your Keycloak realm URL
+            authorization-uri: http://localhost:8080/realms/Aegis_Authserver/protocol/openid-connect/auth
+            token-uri: http://localhost:8080/realms/Aegis_Authserver/protocol/openid-connect/token
+            user-info-uri: http://localhost:8080/realms/Aegis_Authserver/protocol/openid-connect/userinfo
+            jwk-set-uri: http://localhost:8080/realms/Aegis_Authserver/protocol/openid-connect/certs
+            user-name-attribute: preferred_username # Keycloak often uses this for the username
+        registration:
+          keycloak: # This 'keycloak' matches your provider name
+            provider: keycloak
+            client-id: aegis-gateway # Your Keycloak client ID
+            client-secret: GqoP5aTUHRrAVyP9yY1piNShXMEQMxif # The client secret from Keycloak
+            authorization-grant-type: authorization_code
+            redirect-uri: "http://localhost:8082/login/oauth2/code/keycloak"
+            scope: openid,profile,email # Add other scopes your application needs
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8080/realms/Aegis_Authserver # Same as client issuer-uri
+
   cloud:
     gateway:
       server:
@@ -13,6 +36,8 @@ spring:
               uri: http://localhost:8083
               predicates:
                 - Path=/chat-service/**
+              filters:
+                - TokenRelay
           globalcors:
             corsConfigurations:
               '[/**]':
@@ -24,15 +49,23 @@ spring:
                   - OPTIONS
                 allowed-headers:
                   - "*"
+keycloak:
+  token-uri: http://127.0.0.1:8080/realms/Aegis_Authserver/protocol/openid-connect/token
+  client-id: aegis-gateway
+  client-secret: GqoP5aTUHRrAVyP9yY1piNShXMEQMxif
 
 eureka:
   client:
     serviceUrl:
+      # Use container name for Docker networking
       defaultZone: http://localhost:8761/eureka/
     fetch-registry: true
     register-with-eureka: true
   healthcheck:
     enabled: true
   instance:
+    # Tell Eureka what hostname to use for this service
+    hostname: apigateway
+    prefer-ip-address: false
     leaseRenewalIntervalInSeconds: 5
     lease-expiration-duration-in-seconds: 5
