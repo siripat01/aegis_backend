@@ -1,0 +1,90 @@
+# Version control
+.git/
+.gitignore
+
+# IDE and editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Java build output
+**/target/
+*.class
+
+# Python cache (in case of scripts or virtualenvs)
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+.coverage
+.venv/
+
+# Node.js (precautionary)
+node_modules/
+npm-debug.log
+yarn-debug.log
+
+# Go (precautionary)
+/vendor/
+*.test
+.go-cache/
+
+# Build outputs and temp files
+dist/
+build/
+out/
+tmp/
+temp/
+*.tmp
+
+# Test directories and files
+test/
+tests/
+
+# Debug and log files
+debug/
+*.log
+
+# Environment and secrets
+.env*
+*.env
+*.pem
+*.key
+*.crt
+config.local.*
+*.local.yml
+
+# Documentation and markdown
+README*
+*.md
+docs/
+
+# Docker and compose files
+Dockerfile*
+docker-compose*
+compose.yaml
+
+# Local development
+.local/
+local/
+
+# SVN and Mercurial
+.svn/
+.hg/
+
+# Miscellaneous
+*.bak
+*.old
+
+# Exclude Maven wrapper and config (do NOT ignore these)
+# !mvnw
+# !mvnw.cmd
+# !.mvn/
+
+# Exclude Gradle wrapper and config (do NOT ignore these)
+# !gradlew
+# !gradlew.bat
+# !.gradle/
+
+# End of .dockerignore
